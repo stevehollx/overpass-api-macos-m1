@@ -1,10 +1,12 @@
 # Overpass API for Mac Silicon
 
-The Open Streem Maps (OSM) Overpass API distributions from drolbr and wiktorn don't work with Docker Desktop on Apple Silicon Macs due to how MacOS handles permissions and due to how Docker Desktop doesn't support socket files. This project handles permissions and socket files differently, which are where Docker Desktop and MacOS fight those other distribution methods.
+The overpass API distributions from drolbr and wiktorn don't work with Docker Desktop on Apple Silicon Macs.
 
 This project compiles and hosts a local Open Street Maps overpass API from OSMS source on a ubuntu docker image that will work for M1+ macs.
 
-This may also work on other platforms, but is untested. I am using this to host a local API for my other project `climb-analyzer` to query highways, so I trim the planet file down to just north_america highways with `osmium cat input.osm.pbf -o output.osm.bz2 --tag-filter w/highway`.
+It handles permissions and socket files differently, which are where Docker Desktop and MacOS fight those other distribution methods.
+
+This may also work on other platforms, but is untested. I am using this to host a local API for my other project ####### to query highways, so I trim the planet file down to just north_america highways with `osmium cat input.osm.pbf -o output.osm.bz2 --tag-filter w/highway`.
 
 ## Installation
 
@@ -18,4 +20,3 @@ This may also work on other platforms, but is untested. I am using this to host 
 ## Validation and using the API
 
 1. Run ./tests.py to ensure the API is functioning properly.
-2. Call the API with http://localhost:12345/api/interpreter

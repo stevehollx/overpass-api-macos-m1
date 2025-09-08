@@ -1,0 +1,53 @@
+services:
+  overpass-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/arm64  # Native Apple Silicon support
+        - linux/amd64  # x86 compatibility
+    container_name: overpass-api
+    ports:
+      - "12345:80"
+    volumes:
+      # Use Docker-managed volumes to avoid macOS permission issues, allowing for the 
+      # db to persist outside of docker once analyzed and synced
+      - ./db:/db:rw
+      - ./cache:/var/cache/overpass:rw
+      
+      ###############################################################################################
+      # *** EDIT this to your full path where the planet bz2 file is stored.
+      ###############################################################################################
+      # Mount the planet file (keep this as bind mount since it's read-only)
+      - /absolute/path/to/your/planet.osm.bz2:/tmp/planet.osm.bz2:ro
+
+    tmpfs:
+      #Docker Desktop has issues writing sockets to volumes, so these files instead write to tmpfs
+      - /tmp:rw,size=3G,mode=1777
+      - /var/run:rw,size=200M,mode=755
+
+    environment:
+      - OVERPASS_META=no
+      - OVERPASS_MODE=init
+      - OVERPASS_PLANET_URL=file:///tmp/planet.osm.bz2
+      - OVERPASS_USE_AREAS=false
+      - OVERPASS_MAX_MEMORY=6000000000  #6GB adjust based on your system resources
+      - OVERPASS_MEMORY_LIMIT=6000000000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 8G 
+        reservations:
+          memory: 4G
+
+volumes:
+  db:
+    driver: local
+  cache:
+    driver: local
