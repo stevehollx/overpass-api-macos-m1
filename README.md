@@ -8,6 +8,9 @@ It handles permissions and socket files differently, which are where Docker Desk
 
 This may also work on other platforms, but is untested. I am using this to host a local API for my other project ####### to query highways, so I trim the planet file down to just north_america highways with `osmium cat input.osm.pbf -o output.osm.bz2 --tag-filter w/highway`.
 
+## Prerequisites
+1. Docker Desktop installed on MacOS. https://desktop.docker.com/mac/main/arm64/Docker.dmg
+
 ## Installation
 
 1. Clone this project with `git clone <url>` to a folder. If using with my climb-analyzer project, you can put this in an `./overpass-api` folder within `/climb-analyzer`
@@ -15,7 +18,7 @@ This may also work on other platforms, but is untested. I am using this to host 
 3. Fetch your region's OSM planet file from [geofabrik.de](https://download.geofabrik.de).
 4. overpass-api expects a bz2 compression, and geofabrik hosts pbf format, so compress the file with: `osmium cat <input>.osm.pbf -o <output>.osm.bz2`
 5. Edit the docker-compose.yml volume to reference the planet file you downloaded.
-6. Bring it up with `docker-compose up -d1.` Watch the status of the planet file parsing and db building with `docker-compose logs -f --timestamps overpass-api`. Look for errors. You will see 'Reading XML file' if it is parsing properly. North America take 3-6 hours to load, Europe 6-12, and around 40 hours for the entire planet. After initializing once, the files will persist to the mounted ./db folder.
+6. Bring it up with `docker-compose up -d1.` Watch the status of the planet file parsing and db building with `docker compose logs -f --timestamps overpass-api`. Look for errors. You will see 'Reading XML file' if it is parsing properly. North America take 3-6 hours to load, Europe 6-12, and around 40 hours for the entire planet. After initializing once, the files will persist to the mounted ./db folder.
 
 ## Validation and using the API
 
